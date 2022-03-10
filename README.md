@@ -1,6 +1,6 @@
 Additional data source for the Analytics app
 
-## Available Data sources
+## Available data sources
 - Salesforce
 - ...
 

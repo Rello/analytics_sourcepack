@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace OCA\Analytics_Sourcepack\Listener;
 
-use OCA\Analytics_Sourcepack\Datasource\SurveyData;
+use OCA\Analytics_Sourcepack\Datasource\Salesforce;
 
 use OCA\Analytics\Datasource\DatasourceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
-class SurveyListener implements IEventListener {
+class Listener implements IEventListener {
     public function handle(Event $event): void {
         if (!($event instanceof DatasourceEvent)) {
             // Unrelated
             return;
         }
-        $event->registerDatasource(SurveyData::class);
+        $event->registerDatasource(Salesforce::class);
     }
 }

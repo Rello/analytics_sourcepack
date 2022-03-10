@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>analytics_sourcepack</id>
-    <name>Analytics - data source add-on</name>
+    <name>Analytics - data sources add-on</name>
     <summary>Collection of additional data sources</summary>
 	<description><![CDATA[
 Additional data source for the Analytics app
@@ -15,16 +15,15 @@ Additional data source for the Analytics app
     <author>Marcel Scherello</author>
     <namespace>Analytics_Sourcepack</namespace>
     <documentation>
-        <user>https://github.com/Rello/analytics_sourcepack/wiki</user>
+        <user>https://github.com/Rello/analytics_sourcepack</user>
     </documentation>
     <category>office</category>
-    <website>https://rello.github.io/analytics_sourcepack/</website>
-    <discussion>https://help.nextcloud.com/c/apps/analytics</discussion>
+    <website>https://github.com/Rello/analytics_sourcepack</website>
     <bugs>https://github.com/Rello/analytics_sourcepack/issues</bugs>
     <screenshot>
-        https://raw.githubusercontent.com/Rello/analytics_sourcepack/master/screenshots/logo25.png
+        https://raw.githubusercontent.com/Rello/analytics_sourcepack/master/screenshots/logo.png
     </screenshot>
     <dependencies>
-        <nextcloud min-version="20" max-version="21"/>
+        <nextcloud min-version="20" max-version="25"/>
     </dependencies>
 </info>

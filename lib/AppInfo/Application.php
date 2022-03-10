@@ -11,7 +11,7 @@
 
 namespace OCA\Analytics_Sourcepack\AppInfo;
 
-use OCA\Analytics_Sourcepack\Listener\SurveyListener;
+use OCA\Analytics_Sourcepack\Listener\Listener;
 
 use OCA\Analytics\Datasource\DatasourceEvent;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
@@ -31,7 +31,7 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
-        $context->registerEventListener(DatasourceEvent::class, SurveyListener::class);
+        $context->registerEventListener(DatasourceEvent::class, Listener::class);
     }
 
     public function boot(IBootContext $context): void
