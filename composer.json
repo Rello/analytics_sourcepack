@@ -1,0 +1,11 @@
+{
+	"require": {
+      "php": ">=7.4.0",
+      "ext-curl": "*",
+      "ext-json": "*"
+	},
+	"require-dev": {
+      "christophwurst/nextcloud": "^v22.1.1",
+      "psr/log": "^1.1.3",
+    }
+}
