@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace OCA\Analytics_Sourcepack\Datasource;
 use OCA\Analytics\Datasource\IDatasource;
-use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCA\Analytics_Sourcepack\Salesforce\Authentication\PasswordAuthentication;
+use OCA\Analytics_Sourcepack\Salesforce\SalesforceFunctions;
 use OCP\IDBConnection;
 use Psr\Log\LoggerInterface;
 
@@ -21,14 +22,14 @@ class Salesforce implements IDatasource
 {
     /** @var LoggerInterface */
     private $logger;
-    private $db;
+    private $endPoint = 'https://login.salesforce.com/';
+    private $instanceUrl;
+    private $accessToken;
 
     public function __construct(
-        IDBConnection $db,
         LoggerInterface $logger
     )
     {
-        $this->db = $db;
         $this->logger = $logger;
     }
 
@@ -45,7 +46,11 @@ class Salesforce implements IDatasource
     public function getTemplate(): array
     {
         $template = array();
-        array_push($template, ['id' => 'object', 'name' => 'Salesforce Object', 'placeholder' => 'Account']);
+        $template[] = ['id' => 'client_id', 'name' => 'Client id', 'placeholder' => 'Client id'];
+        $template[] = ['id' => 'client_secret', 'name' => 'Client secret', 'placeholder' => 'Client secret'];
+        $template[] = ['id' => 'username', 'name' => 'Username', 'placeholder' => 'Username'];
+        $template[] = ['id' => 'password', 'name' => 'Password', 'placeholder' => 'Password'];
+        $template[] = ['id' => 'select', 'name' => 'Salesforce SOQL select', 'placeholder' => 'SOQL'];
         return $template;
     }
 
@@ -55,10 +60,33 @@ class Salesforce implements IDatasource
      * @NoAdminRequired
      * @param array $option
      * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \OCA\Analytics_Sourcepack\Salesforce\Exception\SalesforceAuthenticationException
+     * @throws \OCA\Analytics_Sourcepack\Salesforce\Exception\SalesforceException
      */
     public function readData($option): array
     {
-        $data = array();
+        $parameter = [
+            'grant_type' => 'password',
+            'client_id' => $option['client_id'],
+            'client_secret' => $option['client_secret'],
+            'username' => $option['username'],
+            'password' => $option['password'],
+            ];
+
+        $auth = $this->authCheck($parameter);
+        $query = $option['select'];
+
+        $salesforceFunctions = new SalesforceFunctions($this->instanceUrl, $this->accessToken);
+        $paymentList = $salesforceFunctions->query($query);
+        $data = $paymentList['records'];
+        foreach ($data as &$row) {
+            unset($row['attributes']);
+            $row = array_values($row);
+        }
+
+        //$this->logger->info('data result: '.json_encode($data));
+
         $header = array();
         $header[0] = 'Version';
         $header[1] = 'Count';
@@ -69,4 +97,27 @@ class Salesforce implements IDatasource
             'error' => 0,
         ];
     }
+
+    /**
+     * check if the existing token is still valid and renew
+     * @param $parameter
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \OCA\Analytics_Sourcepack\Salesforce\Exception\SalesforceAuthenticationException
+     * @throws \OCA\Analytics_Sourcepack\Salesforce\Exception\SalesforceException
+     */
+    private function authCheck($parameter)
+    {
+        //$this->logger->info('parameter: '.json_encode($parameter));
+
+        $salesforce = new PasswordAuthentication($parameter);
+        $salesforce->setEndpoint($this->endPoint);
+        $salesforce->authenticate();
+
+        /* if you need access token or instance url */
+        $this->accessToken = $salesforce->getAccessToken();
+        $this->instanceUrl = $salesforce->getInstanceUrl();
+        return true;
+    }
+
 }

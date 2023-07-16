@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>analytics_sourcepack</id>
-    <name>Analytics - data sources add-on</name>
+    <name>Analytics - data source collection</name>
     <summary>Collection of additional data sources</summary>
 	<description><![CDATA[
 Additional data source for the Analytics app
 
-- Salesforce
-- tbd
+- Salesforce API
+- ...
 
 ]]></description>
     <version>0.0.1</version>

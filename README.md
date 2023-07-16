@@ -1,7 +1,7 @@
 Additional data source for the Analytics app
 
 ## Available data sources
-- Salesforce
+- Salesforce API
 - ...
 
 ## Maintainers
