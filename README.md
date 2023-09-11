@@ -1,8 +1,8 @@
-Additional data source for the Analytics app
+Additional data sources for the Analytics app
 
 ## Available data sources
-- Salesforce API
-- ...
+- Salesforce Sales Cloud
+- Odoo CRM
 
 ## Maintainers
 - [Marcel Scherello](https://github.com/rello) (author, project leader)

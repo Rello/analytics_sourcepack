@@ -12,7 +12,6 @@
 namespace OCA\Analytics_Sourcepack\AppInfo;
 
 use OCA\Analytics_Sourcepack\Listener\Listener;
-
 use OCA\Analytics\Datasource\DatasourceEvent;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\App;
@@ -22,7 +21,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 class Application extends App implements IBootstrap
 {
-    public const APP_ID = 'Analytics_Sourcepack';
+    public const APP_ID = 'analytics_sourcepack';
 
     public function __construct(array $urlParams = [])
     {

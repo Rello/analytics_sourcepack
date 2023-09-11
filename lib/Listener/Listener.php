@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace OCA\Analytics_Sourcepack\Listener;
 
 use OCA\Analytics_Sourcepack\Datasource\Salesforce;
-
+use OCA\Analytics_Sourcepack\Datasource\Odoo;
 use OCA\Analytics\Datasource\DatasourceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -26,5 +26,6 @@ class Listener implements IEventListener {
             return;
         }
         $event->registerDatasource(Salesforce::class);
+        $event->registerDatasource(Odoo::class);
     }
 }
