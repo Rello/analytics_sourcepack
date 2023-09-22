@@ -47,7 +47,7 @@ class Odoo implements IDatasource
         $template[] = ['id' => 'db', 'name' => 'Database', 'placeholder' => ''];
         $template[] = ['id' => 'username', 'name' => 'Username', 'placeholder' => 'Username'];
         $template[] = ['id' => 'password', 'name' => 'Password', 'placeholder' => 'Password'];
-        $template[] = ['id' => 'filter', 'name' => 'Filter', 'placeholder' => '"field", "ilike", "value"', 'type' => 'longtext'];
+        $template[] = ['id' => 'filter', 'name' => 'Filter', 'placeholder' => '["field", "ilike", "value"],[..]', 'type' => 'longtext'];
         $template[] = ['id' => 'groupBy', 'name' => 'Group by', 'placeholder' => 'create_date:week'];
         $template[] = ['id' => 'path', 'name' => 'Object path', 'placeholder' => 'x/y/z'];
         return $template;
