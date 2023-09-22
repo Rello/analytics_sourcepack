@@ -51,6 +51,7 @@ class Salesforce implements IDatasource
         $template[] = ['id' => 'username', 'name' => 'Username', 'placeholder' => 'Username'];
         $template[] = ['id' => 'password', 'name' => 'Password', 'placeholder' => 'Password'];
         $template[] = ['id' => 'select', 'name' => 'Salesforce SOQL select', 'placeholder' => 'SOQL'];
+        $template[] = ['id' => 'name', 'name' => 'Data series description', 'placeholder' => 'optional'];
         return $template;
     }
 
@@ -75,7 +76,8 @@ class Salesforce implements IDatasource
             ];
 
         $auth = $this->authCheck($parameter);
-        $query = $option['select'];
+        $query = htmlspecialchars_decode($option['select'], ENT_NOQUOTES);
+        //$query = $option['select'];
 
         $salesforceFunctions = new SalesforceFunctions($this->instanceUrl, $this->accessToken);
         $paymentList = $salesforceFunctions->query($query);
@@ -83,6 +85,9 @@ class Salesforce implements IDatasource
         foreach ($data as &$row) {
             unset($row['attributes']);
             $row = array_values($row);
+            if ($option['name'] && $option['name'] !== '') {
+                array_unshift($row, $option['name']);
+            }
         }
 
         //$this->logger->info('data result: '.json_encode($data));
