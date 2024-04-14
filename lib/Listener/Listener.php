@@ -15,6 +15,7 @@ namespace OCA\Analytics_Sourcepack\Listener;
 
 use OCA\Analytics_Sourcepack\Datasource\Salesforce;
 use OCA\Analytics_Sourcepack\Datasource\Odoo;
+use OCA\Analytics_Sourcepack\Datasource\NcQuota;
 use OCA\Analytics\Datasource\DatasourceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -27,5 +28,6 @@ class Listener implements IEventListener {
         }
         $event->registerDatasource(Salesforce::class);
         $event->registerDatasource(Odoo::class);
+        $event->registerDatasource(NcQuota::class);
     }
 }

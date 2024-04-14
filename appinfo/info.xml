@@ -8,9 +8,10 @@ Additional data sources for the Analytics app
 
 - Salesforce Sales Cloud
 - Odoo CRM
+- Nextcloud user quota (beta)
 
 ]]></description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <licence>agpl</licence>
     <author>Marcel Scherello</author>
     <namespace>Analytics_Sourcepack</namespace>

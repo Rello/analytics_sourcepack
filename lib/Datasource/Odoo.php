@@ -48,8 +48,8 @@ class Odoo implements IDatasource
         $template[] = ['id' => 'username', 'name' => 'Username', 'placeholder' => 'Username'];
         $template[] = ['id' => 'password', 'name' => 'Password', 'placeholder' => 'Password'];
         $template[] = ['id' => 'filter', 'name' => 'Filter', 'placeholder' => '["field", "ilike", "value"],[..]', 'type' => 'longtext'];
-        $template[] = ['id' => 'groupBy', 'name' => 'Group by', 'placeholder' => 'create_date:week'];
-        $template[] = ['id' => 'path', 'name' => 'Object path', 'placeholder' => 'x/y/z'];
+        $template[] = ['id' => 'groupBy', 'name' => 'Group by', 'placeholder' => 'create_date:week', 'type' => 'longtext'];
+        $template[] = ['id' => 'path', 'name' => 'Object path', 'placeholder' => 'x/y/z', 'type' => 'longtext'];
         return $template;
     }
 
@@ -70,8 +70,20 @@ class Odoo implements IDatasource
         $groupBy = explode(',', $option['groupBy']);
         $filter = !empty($option['filter']) ? json_decode(htmlspecialchars_decode('[' . $option['filter'] . ']', ENT_NOQUOTES), true) : [];
 
+        // Modify the context to include the timezone
+        $context = [
+            "lang" => "en_GB",
+            "tz" => "Europe/Berlin",
+            //"uid" => 70,
+            "allowed_company_ids" => [1],
+                "default_type" => "lead",
+                "search_default_type" => "lead",
+                "search_default_to_process" => 1
+        ];
+
         // Authenticate and store session ID
-        $this->authenticate($url, $db, $username, $password, $this->cookieFile);
+        $this->cookieFile = \OC::$server->getTempManager()->getTemporaryFile();
+        $this->authenticate($url, $db, $username, $password);
 
         // Subsequent request using stored session ID
         $ch = curl_init("$url/web/dataset/call_kw");
@@ -82,11 +94,14 @@ class Odoo implements IDatasource
                 "model" => "crm.lead",
                 "method" => "read_group",
                 "args" => [
-                    $filter,  // filter
-                    ["id:count"],  // fields
-                    $groupBy  // groupby
+                    $filter,
+                    ["id:count", "x_studio_matched_leads", "expected_revenue:sum","prorated_revenue:sum"],  // fields
+                    $groupBy
                 ],
-                "kwargs" => new \stdClass(),  // empty kwargs
+                "kwargs" => [
+                    "context" => $context
+                    // Include other kwargs parameters as required
+                ],
             ],
         ]);
 
@@ -98,6 +113,7 @@ class Odoo implements IDatasource
 
         $rawResult = curl_exec($ch);
         curl_close($ch);
+        unlink($this->cookieFile);
 
         $json = json_decode($rawResult, true);
 
@@ -159,7 +175,7 @@ class Odoo implements IDatasource
         return [
             'header' => $header,
             'data' => $data,
-            'rawData' => json_encode($postData),
+            'rawData' => json_encode($rawResult), // $postData
             'error' => 0,
         ];
     }
@@ -167,7 +183,7 @@ class Odoo implements IDatasource
     /**
      * check if the existing token is still valid and renew
      */
-    private function authenticate($odooUrl, $db, $username, $password, $cookieFile)
+    private function authenticate($odooUrl, $db, $username, $password)
     {
         $ch = curl_init("$odooUrl/web/session/authenticate");
         $postData = json_encode([
@@ -183,9 +199,23 @@ class Odoo implements IDatasource
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
+
+        $rawResult = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $this->logger->error('Curl error: ' . curl_error($ch));
+        }
+
         curl_close($ch);
+
+        $result = json_decode($rawResult, true);
+        if (isset($result['error'])) {
+            $this->logger->error('Odoo error: ' . $result['error']['message']);
+        }
+
+        if (!is_readable($this->cookieFile)) {
+            $this->logger->error('Cookie file is not readable. Check permissions.');
+        }
     }
 
     /**
