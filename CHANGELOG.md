@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4 - 2024-04-14
+### Changed
+- Logo update
+
 ## 0.0.3 - 2024-04-14
 ### Added
 - Nextcloud user quota (beta)
