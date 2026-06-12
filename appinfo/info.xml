@@ -11,7 +11,7 @@ Additional data sources for the Analytics app
 - Nextcloud user quota (beta)
 
 ]]></description>
-    <version>0.0.3</version>
+    <version>0.0.5</version>
     <licence>agpl</licence>
     <author>Marcel Scherello</author>
     <namespace>Analytics_Sourcepack</namespace>

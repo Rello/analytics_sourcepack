@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5 - 2026-06-12
+### Fixed
+- Odoo API change
+
 ## 0.0.4 - 2024-04-14
 ### Changed
 - Logo update
